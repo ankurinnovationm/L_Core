@@ -1,0 +1,189 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+
+def writeXml(xml, path) {
+    try {
+        def writer = new FileWriter(path)
+        groovy.xml.XmlUtil.serialize(xml, writer)
+        writer.flush()
+        writer.close()
+    } catch (Exception e) {
+    }
+}
+def replaceColorFile()
+{
+    Properties tokens = new Properties();
+    tokens.load(new InputStreamReader(new FileInputStream("application.properties"), "utf-8"))
+    def strings = (new XmlSlurper(false, true)).parse('app/src/main/res/values/color.xml')
+    strings.'*'.findAll { node ->
+        def key = node.@'name'.text()
+        tokens[key] != null
+    }.each { node ->
+        def key = node.@'name'.text()
+        def value = groovy.xml.XmlUtil.escapeXml(tokens[key])
+        node.replaceBody value
+    }
+    writeXml(strings, 'app/src/main/res/values/color.xml')
+
+}
+
+def mParticleFile()
+{
+    Properties tokens = new Properties();
+    tokens.load(new InputStreamReader(new FileInputStream("application.properties"), "utf-8"))
+    def strings = (new XmlSlurper(false, true)).parse('app/src/main/res/values/mparticle.xml')
+    strings.'*'.findAll { node ->
+        def key = node.@'name'.text()
+        tokens[key] != null
+    }.each { node ->
+        def key = node.@'name'.text()
+        def value = groovy.xml.XmlUtil.escapeXml(tokens[key])
+        node.replaceBody value
+    }
+    writeXml(strings, 'app/src/main/res/values/mparticle.xml')
+
+}
+
+def replaceStringFile()
+{
+    Properties tokens = new Properties();
+    tokens.load(new InputStreamReader(new FileInputStream("application.properties"), "utf-8"))
+    def strings = (new XmlSlurper(false, true)).parse('app/src/main/res/values/strings.xml')
+    strings.'*'.findAll { node ->
+        def key = node.@'name'.text()
+        tokens[key] != null
+    }.each { node ->
+        def key = node.@'name'.text()
+        def value = groovy.xml.XmlUtil.escapeXml(tokens[key])
+        node.replaceBody value
+    }
+    writeXml(strings, 'app/src/main/res/values/strings.xml')
+}
+
+def changeBuildFile()
+{
+    Properties tokens = new Properties();
+    Properties tokens1 = new Properties();
+    tokens1.load(new InputStreamReader(new FileInputStream('app/build.gradle'), "utf-8"))
+    tokens.load(new InputStreamReader(new FileInputStream("application.properties"), "utf-8"))
+    tokens.each {
+        node ->
+            def key = node.key
+            if( tokens[key] != null)
+            {
+                if(tokens1.containsKey(key))
+                {
+                    def value
+                    def value1
+                    def value2
+                    if(key.equals('applicationId')||  key.equals('versionName'))
+                    {
+                        value = "\""+node.value+"\""
+                        value1 = key+" "+value;
+                        value2 = key+ ' '+tokens1[key]
+
+                    }
+                    else if(key.equals('versionCode'))
+                    {
+                        value = node.value;
+                        value1 = key+" "+value;
+                        value2 = key+' '+tokens1[key]
+                    }
+                    File file = (new File('app/build.gradle'))
+                    print(value2)
+                    def  content = file.getText('utf-8').replace(value2, value1);
+                    file.write(content)
+                }
+
+            }
+
+    }
+}
+
+
+def setSigningConfig()
+{
+    Properties tokens = new Properties();
+    Properties tokens1 = new Properties();
+    tokens1.load(new InputStreamReader(new FileInputStream('app/build.gradle'), "utf-8"))
+    tokens.load(new InputStreamReader(new FileInputStream("signing.properties"), "utf-8"))
+    tokens.each {
+        node ->
+            def key = node.key
+            if( tokens[key] != null)
+            {
+                if(tokens1.containsKey(key))
+                {
+                    def value
+                    def value1
+                    def value2
+                    if(key.equals('storeFile'))
+                    {
+                        value = node.value;
+                        value1 =  key+" file('"+value+"')";
+                        value2 = key+' '+tokens1[key]
+                    }
+                    else
+                    {
+                        value = "\'"+node.value+"\'"
+                        value1 = key+" "+value;
+                        value2 = key+ ' '+tokens1[key]
+                    }
+                    File file = (new File('app/build.gradle'))
+                    print(value2)
+                    def  content = file.getText('utf-8').replace(value2, value1);
+                    file.write(content)
+                }
+
+            }
+
+    }
+}
+
+def changeCssFile()
+{
+    Properties tokens = new Properties();
+    Properties tokens1 = new Properties();
+    tokens.load(new InputStreamReader(new FileInputStream("app/src/main/assets/style.css"), "utf-8"))
+    tokens1.load(new InputStreamReader(new FileInputStream("application.properties"), "utf-8"))
+    def color = tokens1['SecondaryAppThemeColor']
+    def oldColor = tokens['color']
+    File file = (new File('app/src/main/assets/style.css'))
+    def  content = file.getText('utf-8').replace(oldColor, color);
+    file.write(content)
+
+
+
+}
+
+task customize() {
+
+    //replaceColorFile()
+    replaceStringFile()
+  //  changeBuildFile()
+  //  mParticleFile()
+    setSigningConfig()
+  //  changeCssFile()
+
+}
+
+
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.3.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}

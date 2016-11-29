@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginBottom="5dp"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:id="@+id/outerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <ImageView
+            android:id="@+id/imageViewArticle"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/img_placeholder"
+            android:scaleType="centerCrop"/>
+
+        <RelativeLayout
+            android:id="@+id/innerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="13dp"
+            android:layout_toRightOf="@id/imageViewArticle">
+            <TextView
+                android:id="@+id/textViewArticleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="This image is used for demo use. it looks beuitiful and very atractw  qw  qw  q   qw  qw"
+                android:textSize="22sp"
+                android:textColor="@android:color/black"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:paddingRight="13dp"
+                />
+
+        </RelativeLayout>
+
+       <!-- <RelativeLayout
+            android:id="@+id/relativeLayoutPlayVideoIconContainer"
+            android:layout_width="@dimen/list_view_image_width"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageViewListPlayVideo"
+                android:layout_width="@dimen/size_play_video_list"
+                android:layout_height="@dimen/size_play_video_list"
+                android:layout_centerInParent="true"
+                android:background="@drawable/img_play_video"
+                android:scaleType="centerCrop"/>
+        </RelativeLayout>-->
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

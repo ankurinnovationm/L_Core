@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><resources>
+  <string name="hello_world">Hello world!</string>
+  <string name="action_settings">Settings</string>
+  <string name="SecondaryAppThemeColor">#FF0045EF</string>
+  <string name="PrimaryAppThemeColor">#FFE4007A</string>
+  <string name="app_name">Core</string>
+  <string name="CoreAppId">94</string>
+</resources>

@@ -1,5 +1,6 @@
 package core2.maz.com.core2.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,12 +23,12 @@ public class BaseFragment extends Fragment {
 
     public int sectionIdentifier;
     private Menu menu;
-    private boolean isVisibleToUser = false;
+    public boolean isVisibleToUser = false;
     public  String title;
+    private String fragmentIdentifier;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.base_fragment, container, false);
-
         return view;
     }
 
@@ -37,10 +38,11 @@ public class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         menu = (Menu) getArguments().getSerializable("menu");
         sectionIdentifier = getArguments().getInt("section_identifier");
+        fragmentIdentifier = getArguments().getString("fragmentIdentifier");
 
         if(savedInstanceState==null)
         {
-          //  getActivity().setTitle(menu.getTitle());
+            //  getActivity().setTitle(menu.getTitle());
             if (menu != null)
             {
                 if (!menu.getType().equalsIgnoreCase("vid"))
@@ -48,32 +50,30 @@ public class BaseFragment extends Fragment {
                     ArrayList<Menu> menus = AppFeedManager.getMenus(menu.getIdentifier());
                     replaceFragment(menu.getTitle(),sectionIdentifier, menus);
                 }
-                else
-                {
 
-                }
             }
         }
-
 
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser)
         {
             this.isVisibleToUser = isVisibleToUser;
             if (menu != null)
             {
                 this.isVisibleToUser =isVisibleToUser;
-                getActivity().setTitle(menu.getTitle());
+                Context context = getActivity();
+                if(context!=null)
+                    getActivity().setTitle(menu.getTitle());
             }
         }
-        super.setUserVisibleHint(isVisibleToUser);
+
 
     }
-
-    public void replaceFragment(String title,int sectionIdentifier,ArrayList<Menu> menus)
+    public void replaceFragment(String title,int sectionIdentifier,ArrayList<Menu> menus,boolean yes)
     {
 
         Bundle bundle = new Bundle();
@@ -82,12 +82,30 @@ public class BaseFragment extends Fragment {
             getActivity().setTitle(title);
         bundle.putSerializable("list", menus);
         bundle.putString("title",title);
-        ListFragment listFragment = new ListFragment();
+        VideoFragment listFragment = new VideoFragment();
         listFragment.setArguments(bundle);
         FragmentManager fragmentManager = getChildFragmentManager();
         // Fragment fragment = inflateFragment(fragmentIdentifier);
         ((MainActivity) getActivity()).mStacks.get(sectionIdentifier).push(listFragment);
         fragmentManager.beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+    }
+
+    public void replaceFragment(String title,int sectionIdentifier,ArrayList<Menu> menus)
+    {
+
+        Bundle bundle = new Bundle();
+        this.title = title;
+        if(isVisibleToUser)
+        {
+            getActivity().setTitle(title);
+        }
+        bundle.putSerializable("list", menus);
+        bundle.putString("title",title);
+        Fragment fragment = inflateFragment(fragmentIdentifier);
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getChildFragmentManager();
+        ((MainActivity) getActivity()).mStacks.get(sectionIdentifier).push(fragment);
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment, "").commit();
     }
 
     public void replaceFragment(Fragment fragment)
@@ -103,23 +121,27 @@ public class BaseFragment extends Fragment {
         Fragment fragment = null;
         switch (fragmentName)
         {
-            case AppConstants.KEY_CARD_FRAGMENT:
+           /* case AppConstants.KEY_CARD_FRAGMENT:
                 fragment = new CardFragment();
                 break;
-
-            case AppConstants.KEY_CAROUSEL_FRAGMENT:
+*/
+           /* case AppConstants.KEY_CAROUSEL_FRAGMENT:
                 fragment = new CarouselFragment();
 
                 break;
             case  AppConstants.KEY_EDGE_FRAGMENT:
                 fragment = new EdgeFragment();
-                break;
+                break;*/
             case AppConstants.KEY_LIST_FRAGMENT:
                 fragment = new ListFragment();
                 break;
-            case AppConstants.KEY_MOSAIC_FRAGMENT:
-                fragment = new MosaicFragment();
+
+            default:
+                fragment = new ListFragment();
                 break;
+            /*case AppConstants.KEY_MOSAIC_FRAGMENT:
+                fragment = new MosaicFragment();
+                break;*/
 
         }
         return fragment;

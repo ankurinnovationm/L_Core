@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:id="@+id/linearLayoutCardViewRootContainer"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginBottom="@dimen/padding_left_right_cards">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewSubRootContainer"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        app:cardCornerRadius="12dp">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutCardRootContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="@drawable/card_view_border">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutCardItemSubContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/white">
+
+                <ImageView
+                    android:id="@+id/imageViewCardItemShare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    />
+
+                <ImageView
+                    android:id="@+id/imageViewCardItemSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/imageViewCardItemShare"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/relativeLayoutCardItemSubContainer"
+                >
+
+                <ImageView
+                    android:id="@+id/cardFeedImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/img_placeholder"
+                    android:scaleType="centerCrop"/>
+
+                <ImageView
+                    android:id="@+id/imageViewCardGradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/foreground_gredient"
+                    />
+
+                <TextView
+                    android:id="@+id/cardFeedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:maxLines="4"
+                    android:layout_alignParentBottom="true"
+                    android:text=""
+                    android:ellipsize="end"
+                    android:textColor="#fff"
+                    android:lineSpacingExtra="-4dp"
+                    android:padding="15dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/imageViewCardPlayVideo"
+                    android:layout_width="@dimen/size_image_view_play_video"
+                    android:layout_height="@dimen/size_image_view_play_video"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/img_play_video"
+                    android:layout_centerInParent="true"
+                    />
+            </RelativeLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
+

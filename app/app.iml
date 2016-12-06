@@ -83,6 +83,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.exoplayer/exoplayer/r2.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaResources" />
@@ -104,6 +105,7 @@
     <orderEntry type="library" exported="" name="recyclerview-v7-24.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-compat-24.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-24.2.0" level="project" />
+    <orderEntry type="library" exported="" name="exoplayer-r2.0.0" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="android-query-full.0.26.7" level="project" />
     <orderEntry type="library" exported="" name="support-core-ui-24.2.0" level="project" />

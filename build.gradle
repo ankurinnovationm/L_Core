@@ -162,7 +162,7 @@ task customize() {
     replaceStringFile()
   //  changeBuildFile()
   //  mParticleFile()
-    setSigningConfig()
+  //  setSigningConfig()
   //  changeCssFile()
 
 }

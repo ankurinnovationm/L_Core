@@ -2,4 +2,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="is_tab_or_mobile">0dp</dimen>
+    <dimen name="padding_left_right_cards">10dp</dimen>
+    <dimen name="size_image_view_play_video">60dp</dimen>
+    <dimen name="image_view_video_icon_size">60dp</dimen>
+
 </resources>

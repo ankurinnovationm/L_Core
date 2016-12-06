@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import java.util.Stack;
 import core2.maz.com.core2.R;
 import core2.maz.com.core2.constants.AppConstants;
 import core2.maz.com.core2.fragments.BaseFragment;
+import core2.maz.com.core2.fragments.VideoFragment;
 import core2.maz.com.core2.fragments.ViewPagerAdapter;
 import core2.maz.com.core2.managers.AppFeedManager;
 import core2.maz.com.core2.managers.CachingManager;
@@ -43,10 +45,11 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     public ViewPager viewPager;
     private AQuery aQuery;
-    public HashMap<Integer, Stack<Fragment>> mStacks;
-    public List<Fragment> sectionFragment;
+    public  HashMap<Integer, Stack<Fragment>> mStacks;
+    public  List<Fragment> sectionFragment;
     private CoordinatorLayout coordinatorLayout;
     private Feed feed = null;
+    private AppBarLayout appBarLayout;
 
 
     @Override
@@ -54,7 +57,13 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeView();
+
+        if(savedInstanceState!=null)
+        {
+            restoreState();
+        }
+
+            initializeView();
 
     }
 
@@ -88,10 +97,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
         tabLayout.setupWithViewPager(viewPager);
 
         if (AppFeedManager.myMap != null && !AppFeedManager.myMap.isEmpty())
         {
+
             onSuccessGetAppFeedAsynkTask();
 
         }
@@ -129,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             UiUtil.dismissDialog(dialog);
             if (exception == null) {
-                onSuccessGetAppFeedAsynkTask();
+             //   onSuccessGetAppFeedAsynkTask();
             } else {
 
             }
@@ -150,7 +161,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        CachingManager.setFragmentList(sectionFragment);
+        CachingManager.setFragmentStack(mStacks);
+
+    }
+
+    private void restoreState()
+    {
+        this.mStacks = CachingManager.getFragmentStack();
+        this.sectionFragment = CachingManager.getFragmentList();
+
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -180,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void prepareSection(final ArrayList<Menu> sections)
     {
+
         mStacks = new HashMap<>();
         int count =0;
 
@@ -187,15 +213,43 @@ public class MainActivity extends AppCompatActivity {
         sectionFragment = new ArrayList<>();
         for(Menu menu : sections)
         {
-            BaseFragment baseFragment = new BaseFragment();
+            Fragment fragment = null;
             Bundle bundle = new Bundle();
             bundle.putString("name", AppConstants.KEY_EDGE_FRAGMENT);
             bundle.putInt("section_identifier", count);
-            bundle.putSerializable("menu", menu);
-            baseFragment.setArguments(bundle);
-            sectionFragment.add(baseFragment);
+            bundle.putString("fragmentIdentifier",menu.getLayout());
+            if(!menu.getType().equalsIgnoreCase("fake")&& !menu.getType().equalsIgnoreCase("Live"))
+            {
+                fragment = new BaseFragment();
+                bundle.putSerializable("menu", menu);
+            }
+            else
+            {
+                fragment = new VideoFragment();
+
+                if(menu.getType().equalsIgnoreCase("Live"))
+                {
+                    ArrayList menus1 = new ArrayList();
+                    menus1.add(menu);
+                    bundle.putSerializable("list",menus1);
+                }
+                else
+                {
+                    ArrayList<Menu> menus = AppFeedManager.getMenus(menu.getIdentifier());
+                    bundle.putSerializable("list",menus);
+                }
+
+
+            }
+
+
+
+            fragment.setArguments(bundle);
+
+            sectionFragment.add(fragment);
             mStacks.put(count, new Stack<Fragment>());
-            adapter.addFragment(baseFragment, null);
+            adapter.addFragment(fragment, null);
+
             count++;
 
         }
@@ -232,5 +286,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public void hideTop()
+    {
+       toolbar.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+        appBarLayout.setVisibility(View.GONE);
+    }
+
+    public void showTop()
+    {
+        toolbar.setVisibility(View.VISIBLE);
+       tabLayout.setVisibility(View.VISIBLE);
+        appBarLayout.setVisibility(View.VISIBLE);
     }
 }
